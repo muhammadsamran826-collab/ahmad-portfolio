@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Data Management Dashboard | Muhammad Ahmad</title>
+
+    <meta
+        name="description"
+        content="Modern Data Management Dashboard created by Muhammad Ahmad."
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #07070b;
+            --card: #111119;
+            --card2: #151522;
+            --text: #f5f5f7;
+            --muted: #9696a6;
+            --purple: #795cff;
+            --purple-light: #a991ff;
+            --cyan: #38d9ff;
+            --green: #45e6a3;
+            --red: #ff637b;
+            --border: rgba(255,255,255,.09);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 85% 5%,
+                    rgba(121,92,255,.16),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 10% 80%,
+                    rgba(56,217,255,.07),
+                    transparent 25%
+                ),
+                var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: .4;
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,.018) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.018) 1px,
+                    transparent 1px
+                );
+            background-size: 55px 55px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+            position: relative;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: .12em;
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        .back-btn {
+            border: 1px solid var(--border);
+            padding: 10px 18px;
+            border-radius: 50px;
+            color: #ccc;
+            font-size: 13px;
+            transition: .3s;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* HEADER */
+
+        .dashboard-header {
+            padding: 60px 0 35px;
+        }
+
+        .eyebrow {
+            color: var(--purple-light);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: .2em;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-header h1 {
+            font-size: clamp(38px, 6vw, 72px);
+            letter-spacing: -.06em;
+            line-height: .95;
+        }
+
+        .dashboard-header h1 span {
+            color: var(--muted);
+        }
+
+        .dashboard-header p {
+            max-width: 650px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        /* FILTER */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0 25px;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: .35;
+                transform: scale(.7);
+            }
+        }
+
+        select {
+            background: #111119;
+            color: white;
+            border: 1px solid var(--border);
+            padding: 11px 15px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        /* STAT CARDS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .stat {
+            position: relative;
+            overflow: hidden;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.065),
+                    rgba(255,255,255,.015)
+                );
+            transition: .4s;
+        }
+
+        .stat::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            right: -60px;
+            bottom: -60px;
+            background: var(--purple);
+            filter: blur(55px);
+            opacity: .2;
+        }
+
+        .stat:hover {
+            transform: translateY(-7px);
+            border-color: rgba(121,92,255,.55);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .stat-value {
+            margin-top: 15px;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -.05em;
+        }
+
+        .stat-change {
+            margin-top: 10px;
+            color: var(--green);
+            font-size: 11px;
+        }
+
+        /* CHART GRID */
+
+        .charts {
+            display: grid;
+            grid-template-columns: 1.7fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.05),
+                    rgba(255,255,255,.015)
+                );
+            padding: 25px;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-head h2 {
+            font-size: 18px;
+        }
+
+        .card-head span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .chart-box {
+            height: 310px;
+        }
+
+        /* LOWER GRID */
+
+        .lower {
+            display: grid;
+            grid-template-columns: 1.4fr .8fr;
+            gap: 15px;
+            margin-top: 15px;
+            padding-bottom: 60px;
+        }
+
+        /* TABLE */
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            text-align: left;
+            color: #777;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 17px 10px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .customer {
+            color: white;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 50px;
+            font-size: 9px;
+        }
+
+        .completed {
+            color: var(--green);
+            background: rgba(69,230,163,.08);
+        }
+
+        .pending {
+            color: #ffd166;
+            background: rgba(255,209,102,.08);
+        }
+
+        .cancelled {
+            color: var(--red);
+            background: rgba(255,99,123,.08);
+        }
+
+        /* INSIGHTS */
+
+        .insight {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .insight:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(121,92,255,.1);
+            color: var(--purple-light);
+        }
+
+        .insight strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .insight p {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 0;
+            color: #666;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* ANIMATION */
+
+        .animate {
+            opacity: 0;
+            transform: translateY(25px);
+            animation: show .7s ease forwards;
+        }
+
+        .a1 { animation-delay: .1s; }
+        .a2 { animation-delay: .2s; }
+        .a3 { animation-delay: .3s; }
+        .a4 { animation-delay: .4s; }
+
+        @keyframes show {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts,
+            .lower {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            .topbar {
+                height: 70px;
+            }
+
+            .back-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            .dashboard-header {
+                padding-top: 45px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .chart-box {
+                height: 250px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 44px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+        <a href="#" class="logo">
+            AHMAD<span>.</span>
+        </a>
+
+        <a href="../index.html" class="back-btn">
+            ← Back to Portfolio
+        </a>
+    </header>
+
+
+    <!-- HEADER -->
+
+    <section class="dashboard-header animate">
+        <div class="eyebrow">DATA MANAGEMENT SYSTEM</div>
+
+        <h1>
+            Business Data
+            <span>Dashboard.</span>
+        </h1>
+
+        <p>
+            A modern dashboard for organizing business data,
+            monitoring sales performance, tracking orders and
+            presenting important information through interactive
+            visual reports.
+        </p>
+    </section>
+
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar animate a1">
+
+        <div class="live">
+            <span class="live-dot"></span>
+            Dashboard Updated
+        </div>
+
+        <select id="period">
+            <option>Last 12 Months</option>
+            <option>Last 6 Months</option>
+            <option>This Year</option>
+        </select>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <section class="stats">
+
+        <div class="stat animate a1">
+            <div class="stat-label">Total Sales</div>
+            <div class="stat-value" id="sales">$45,800</div>
+            <div class="stat-change">↑ 18.6% this month</div>
+        </div>
+
+        <div class="stat animate a2">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="orders">860</div>
+            <div class="stat-change">↑ 12.4% this month</div>
+        </div>
+
+        <div class="stat animate a3">
+            <div class="stat-label">Customers</div>
+            <div class="stat-value">1,250</div>
+            <div class="stat-change">↑ 9.8% new customers</div>
+        </div>
+
+        <div class="stat animate a4">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value">720</div>
+            <div class="stat-change">83.7% completion rate</div>
+        </div>
+
+    </section>
+
+
+    <!-- CHARTS -->
+
+    <section class="charts">
+
+        <div class="card animate a2">
+
+            <div class="card-head">
+                <h2>Sales Overview</h2>
+                <span>Monthly Performance</span>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="salesChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="card animate a3">
+
+            <div class="card-head">
+                <h2>Sales by Category</h2>
+                <span>Distribution</span>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="categoryChart"></canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LOWER -->
+
+    <section class="lower">
+
+        <!-- RECENT ORDERS -->
+
+        <div class="card animate a3">
+
+            <div class="card-head">
+                <h2>Recent Orders</h2>
+                <span>Latest Records</span>
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td class="customer">Ahmed Store</td>
+                            <td>Laptop</td>
+                            <td>$1,600</td>
+                            <td>
+                                <span class="status completed">
+                                    Completed
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="customer">ABC Traders</td>
+                            <td>Accessories</td>
+                            <td>$850</td>
+                            <td>
+                                <span class="status completed">
+                                    Completed
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="customer">XYZ Ltd</td>
+                            <td>Keyboard</td>
+                            <td>$430</td>
+                            <td>
+                                <span class="status pending">
+                                    Pending
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="customer">Digital Hub</td>
+                            <td>Monitor</td>
+                            <td>$1,200</td>
+                            <td>
+                                <span class="status completed">
+                                    Completed
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="customer">Tech World</td>
+                            <td>Mouse</td>
+                            <td>$320</td>
+                            <td>
+                                <span class="status cancelled">
+                                    Cancelled
+                                </span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- INSIGHTS -->
+
+        <div class="card animate a4">
+
+            <div class="card-head">
+                <h2>Data Insights</h2>
+                <span>Summary</span>
+            </div>
+
+            <div class="insight">
+
+                <div class="insight-icon">↗</div>
+
+                <div>
+                    <strong>Sales Growth</strong>
+                    <p>Sales increased by 18.6%.</p>
+                </div>
+
+            </div>
+
+            <div class="insight">
+
+                <div class="insight-icon">◈</div>
+
+                <div>
+                    <strong>Top Category</strong>
+                    <p>Electronics leads overall sales.</p>
+                </div>
+
+            </div>
+
+            <div class="insight">
+
+                <div class="insight-icon">✓</div>
+
+                <div>
+                    <strong>Order Performance</strong>
+                    <p>83.7% orders completed.</p>
+                </div>
+
+            </div>
+
+            <div class="insight">
+
+                <div class="insight-icon">+</div>
+
+                <div>
+                    <strong>New Customers</strong>
+                    <p>185 customers added recently.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<footer>
+    © 2026 Muhammad Ahmad — Data Management Dashboard
+</footer>
+
+
+<script>
+
+    /* SALES CHART */
+
+    const salesCtx =
+        document
+            .getElementById("salesChart")
+            .getContext("2d");
+
+    const gradient =
+        salesCtx.createLinearGradient(
+            0,
+            0,
+            0,
+            300
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(121,92,255,.45)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(121,92,255,0)"
+    );
+
+
+    new Chart(
+        salesCtx,
+        {
+            type: "line",
+
+            data: {
+
+                labels: [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec"
+                ],
+
+                datasets: [
+                    {
+                        label: "Sales",
+
+                        data: [
+                            2400,
+                            3100,
+                            2800,
+                            4200,
+                            3900,
+                            5100,
+                            4700,
+                            5600,
+                            4900,
+                            6200,
+                            5800,
+                            7100
+                        ],
+
+                        borderColor:
+                            "#8d75ff",
+
+                        backgroundColor:
+                            gradient,
+
+                        borderWidth: 2,
+
+                        fill: true,
+
+                        tension: .4,
+
+                        pointRadius: 3,
+
+                        pointBackgroundColor:
+                            "#ffffff"
+                    }
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    x: {
+                        grid: {
+                            color:
+                                "rgba(255,255,255,.04)"
+                        },
+                        ticks: {
+                            color: "#777"
+                        }
+                    },
+
+                    y: {
+                        grid: {
+                            color:
+                                "rgba(255,255,255,.04)"
+                        },
+                        ticks: {
+                            color: "#777"
+                        }
+                    }
+
+                }
+            }
+        }
+    );
+
+
+    /* CATEGORY CHART */
+
+    const categoryCtx =
+        document
+            .getElementById("categoryChart")
+            .getContext("2d");
+
+
+    new Chart(
+        categoryCtx,
+        {
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Electronics",
+                    "Accessories",
+                    "Software",
+                    "Services"
+                ],
+
+                datasets: [
+                    {
+                        data: [
+                            42,
+                            25,
+                            18,
+                            15
+                        ],
+
+                        backgroundColor: [
+                            "#795cff",
+                            "#38d9ff",
+                            "#45e6a3",
+                            "#ff637b"
+                        ],
+
+                        borderWidth: 0,
+
+                        hoverOffset: 8
+                    }
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+
+                    legend: {
+                        position: "bottom",
+
+                        labels: {
+                            color: "#aaa",
+                            padding: 15,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    );
+
+
+    /* PERIOD SELECT */
+
+    document
+        .getElementById("period")
+        .addEventListener(
+            "change",
+            function () {
+
+                const sales =
+                    document.getElementById("sales");
+
+                const orders =
+                    document.getElementById("orders");
+
+                if (
+                    this.value ===
+                    "Last 6 Months"
+                ) {
+
+                    sales.textContent =
+                        "$28,450";
+
+                    orders.textContent =
+                        "520";
+
+                } else if (
+                    this.value ===
+                    "This Year"
+                ) {
+
+                    sales.textContent =
+                        "$45,800";
+
+                    orders.textContent =
+                        "860";
+
+                } else {
+
+                    sales.textContent =
+                        "$45,800";
+
+                    orders.textContent =
+                        "860";
+
+                }
+
+            }
+        );
+
+</script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 /* =====================================================
    MUHAMMAD AHMAD PORTFOLIO
-   Main JavaScript
+   PREMIUM ANIMATED JAVASCRIPT
 ===================================================== */
 
 
@@ -20,10 +20,12 @@ window.addEventListener("load", () => {
         preloader.style.pointerEvents = "none";
 
         setTimeout(() => {
-            preloader.remove();
-        }, 500);
 
-    }, 700);
+            preloader.remove();
+
+        }, 800);
+
+    }, 900);
 
 });
 
@@ -37,6 +39,7 @@ const cursorDot =
 
 const cursorRing =
     document.querySelector(".cursor-ring");
+
 
 let mouseX = 0;
 let mouseY = 0;
@@ -84,7 +87,9 @@ function animateCursor() {
     }
 
 
-    requestAnimationFrame(animateCursor);
+    requestAnimationFrame(
+        animateCursor
+    );
 
 }
 
@@ -104,26 +109,50 @@ const interactiveElements =
 
 interactiveElements.forEach((element) => {
 
-    element.addEventListener("mouseenter", () => {
+    element.addEventListener(
+        "mouseenter",
+        () => {
 
-        cursorRing.style.width = "55px";
-        cursorRing.style.height = "55px";
+            if (!cursorRing)
+                return;
 
-        cursorRing.style.borderColor =
-            "#a991ff";
+            cursorRing.style.width =
+                "58px";
 
-    });
+            cursorRing.style.height =
+                "58px";
+
+            cursorRing.style.borderColor =
+                "#a991ff";
+
+            cursorRing.style.background =
+                "rgba(121,92,255,.05)";
+
+        }
+    );
 
 
-    element.addEventListener("mouseleave", () => {
+    element.addEventListener(
+        "mouseleave",
+        () => {
 
-        cursorRing.style.width = "34px";
-        cursorRing.style.height = "34px";
+            if (!cursorRing)
+                return;
 
-        cursorRing.style.borderColor =
-            "rgba(255,255,255,.6)";
+            cursorRing.style.width =
+                "34px";
 
-    });
+            cursorRing.style.height =
+                "34px";
+
+            cursorRing.style.borderColor =
+                "rgba(255,255,255,.6)";
+
+            cursorRing.style.background =
+                "transparent";
+
+        }
+    );
 
 });
 
@@ -139,24 +168,46 @@ const mobileMenu =
     document.getElementById("mobileMenu");
 
 
-menuBtn.addEventListener("click", () => {
+if (menuBtn && mobileMenu) {
 
-    mobileMenu.classList.toggle("active");
+    menuBtn.addEventListener(
+        "click",
+        () => {
 
-});
+            menuBtn.classList.toggle(
+                "active"
+            );
+
+            mobileMenu.classList.toggle(
+                "active"
+            );
+
+        }
+    );
 
 
-document
-    .querySelectorAll(".mobile-menu a")
-    .forEach((link) => {
+    document
+        .querySelectorAll(".mobile-menu a")
+        .forEach((link) => {
 
-        link.addEventListener("click", () => {
+            link.addEventListener(
+                "click",
+                () => {
 
-            mobileMenu.classList.remove("active");
+                    menuBtn.classList.remove(
+                        "active"
+                    );
+
+                    mobileMenu.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
 
         });
 
-    });
+}
 
 
 /* =====================================================
@@ -164,7 +215,9 @@ document
 ===================================================== */
 
 const progress =
-    document.querySelector(".scroll-progress");
+    document.querySelector(
+        ".scroll-progress"
+    );
 
 
 window.addEventListener(
@@ -179,10 +232,51 @@ window.addEventListener(
             window.innerHeight;
 
         const percentage =
-            (scrollTop / pageHeight) * 100;
+            pageHeight > 0
+                ? (scrollTop / pageHeight) * 100
+                : 0;
 
-        progress.style.width =
-            `${percentage}%`;
+        if (progress) {
+
+            progress.style.width =
+                `${percentage}%`;
+
+        }
+
+    },
+    { passive: true }
+);
+
+
+/* =====================================================
+   NAVBAR ON SCROLL
+===================================================== */
+
+const navbar =
+    document.querySelector(".navbar");
+
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (!navbar)
+            return;
+
+
+        if (window.scrollY > 50) {
+
+            navbar.classList.add(
+                "scrolled"
+            );
+
+        } else {
+
+            navbar.classList.remove(
+                "scrolled"
+            );
+
+        }
 
     },
     { passive: true }
@@ -194,7 +288,9 @@ window.addEventListener(
 ===================================================== */
 
 const profileCard =
-    document.getElementById("profileCard");
+    document.getElementById(
+        "profileCard"
+    );
 
 
 if (profileCard) {
@@ -208,18 +304,24 @@ if (profileCard) {
 
 
             const x =
-                (window.innerWidth / 2 -
-                event.clientX) / 35;
+                (
+                    window.innerWidth / 2 -
+                    event.clientX
+                ) / 35;
 
 
             const y =
-                (window.innerHeight / 2 -
-                event.clientY) / 35;
+                (
+                    window.innerHeight / 2 -
+                    event.clientY
+                ) / 35;
 
 
             profileCard.style.transform =
-                `rotateY(${-x}deg)
-                 rotateX(${y}deg)`;
+                `
+                rotateY(${-x}deg)
+                rotateX(${y}deg)
+                `;
 
         }
     );
@@ -243,7 +345,9 @@ if (profileCard) {
 ===================================================== */
 
 const magneticButtons =
-    document.querySelectorAll(".magnetic");
+    document.querySelectorAll(
+        ".magnetic"
+    );
 
 
 magneticButtons.forEach((button) => {
@@ -273,8 +377,12 @@ magneticButtons.forEach((button) => {
 
 
             button.style.transform =
-                `translate(${x * .15}px,
-                           ${y * .15}px)`;
+                `
+                translate(
+                    ${x * .15}px,
+                    ${y * .15}px
+                )
+                `;
 
         }
     );
@@ -299,7 +407,7 @@ magneticButtons.forEach((button) => {
 
 const revealElements =
     document.querySelectorAll(
-        ".section-heading, .about-text, .stat-card, .skill-card, .service-item, .project-card, .timeline-item, .education-card"
+        ".reveal"
     );
 
 
@@ -307,19 +415,25 @@ const revealObserver =
     new IntersectionObserver(
         (entries) => {
 
-            entries.forEach((entry) => {
+            entries.forEach(
+                (entry) => {
 
-                if (
-                    entry.isIntersecting
-                ) {
+                    if (
+                        entry.isIntersecting
+                    ) {
 
-                    entry.target.classList.add(
-                        "revealed"
-                    );
+                        entry.target.classList.add(
+                            "revealed"
+                        );
+
+                        revealObserver.unobserve(
+                            entry.target
+                        );
+
+                    }
 
                 }
-
-            });
+            );
 
         },
         {
@@ -328,118 +442,170 @@ const revealObserver =
     );
 
 
-revealElements.forEach((element) => {
+revealElements.forEach(
+    (element, index) => {
 
-    element.style.opacity = "0";
+        element.style.transitionDelay =
+            `${(index % 6) * 80}ms`;
 
-    element.style.transform =
-        "translateY(40px)";
+        revealObserver.observe(
+            element
+        );
 
-    element.style.transition =
-        "opacity .8s ease, transform .8s ease";
+    }
+);
 
-    revealObserver.observe(element);
+
+/* =====================================================
+   PROJECT CARD 3D TILT
+===================================================== */
+
+const projectCards =
+    document.querySelectorAll(
+        ".project-card"
+    );
+
+
+projectCards.forEach((card) => {
+
+    card.addEventListener(
+        "mousemove",
+        (event) => {
+
+            if (window.innerWidth <= 800)
+                return;
+
+
+            const rect =
+                card.getBoundingClientRect();
+
+
+            const x =
+                (
+                    event.clientX -
+                    rect.left
+                ) / rect.width -
+                .5;
+
+
+            const y =
+                (
+                    event.clientY -
+                    rect.top
+                ) / rect.height -
+                .5;
+
+
+            card.style.transform =
+                `
+                perspective(1000px)
+                rotateY(${x * 7}deg)
+                rotateX(${-y * 7}deg)
+                translateY(-8px)
+                `;
+
+        }
+    );
+
+
+    card.addEventListener(
+        "mouseleave",
+        () => {
+
+            card.style.transform =
+                "";
+
+        }
+    );
 
 });
 
 
 /* =====================================================
-   REVEAL CLASS
+   SKILL CARD TILT
 ===================================================== */
 
-const style =
-    document.createElement("style");
+const skillCards =
+    document.querySelectorAll(
+        ".skill-card"
+    );
 
 
-style.innerHTML = `
+skillCards.forEach((card) => {
 
-.revealed {
+    card.addEventListener(
+        "mousemove",
+        (event) => {
 
-    opacity: 1 !important;
-
-    transform:
-        translateY(0)
-        !important;
-
-}
-
-`;
+            if (window.innerWidth <= 800)
+                return;
 
 
-document.head.appendChild(style);
+            const rect =
+                card.getBoundingClientRect();
+
+
+            const x =
+                (
+                    event.clientX -
+                    rect.left
+                ) / rect.width -
+                .5;
+
+
+            const y =
+                (
+                    event.clientY -
+                    rect.top
+                ) / rect.height -
+                .5;
+
+
+            card.style.transform =
+                `
+                perspective(900px)
+                rotateY(${x * 4}deg)
+                rotateX(${-y * 4}deg)
+                translateY(-10px)
+                `;
+
+        }
+    );
+
+
+    card.addEventListener(
+        "mouseleave",
+        () => {
+
+            card.style.transform =
+                "";
+
+        }
+    );
+
+});
 
 
 /* =====================================================
-   STAGGER SKILL CARDS
+   PROJECT LINK CLICK EFFECT
 ===================================================== */
 
 document
-    .querySelectorAll(".skills-grid")
-    .forEach((grid) => {
+    .querySelectorAll(".project-link")
+    .forEach((link) => {
 
-        const cards =
-            grid.querySelectorAll(".skill-card");
-
-        cards.forEach((card, index) => {
-
-            card.style.transitionDelay =
-                `${index * 80}ms`;
-
-        });
-
-    });
-
-
-/* =====================================================
-   PROJECT CARD TILT
-===================================================== */
-
-document
-    .querySelectorAll(".project-card")
-    .forEach((card) => {
-
-        card.addEventListener(
-            "mousemove",
-            (event) => {
-
-                if (window.innerWidth <= 800)
-                    return;
-
-
-                const rect =
-                    card.getBoundingClientRect();
-
-
-                const x =
-                    (event.clientX -
-                    rect.left) /
-                    rect.width -
-                    .5;
-
-
-                const y =
-                    (event.clientY -
-                    rect.top) /
-                    rect.height -
-                    .5;
-
-
-                card.style.transform =
-                    `perspective(900px)
-                     rotateY(${x * 6}deg)
-                     rotateX(${-y * 6}deg)
-                     translateY(-8px)`;
-
-            }
-        );
-
-
-        card.addEventListener(
-            "mouseleave",
+        link.addEventListener(
+            "click",
             () => {
 
-                card.style.transform =
-                    "";
+                link.style.transform =
+                    "rotate(45deg) scale(.9)";
+
+                setTimeout(() => {
+
+                    link.style.transform = "";
+
+                }, 300);
 
             }
         );
@@ -448,32 +614,124 @@ document
 
 
 /* =====================================================
-   SMOOTH NAVBAR COLOR
+   ACTIVE NAV LINK
 ===================================================== */
 
-const navbar =
-    document.querySelector(".navbar");
+const sections =
+    document.querySelectorAll(
+        "section[id]"
+    );
+
+
+const navLinks =
+    document.querySelectorAll(
+        ".nav-links a"
+    );
 
 
 window.addEventListener(
     "scroll",
     () => {
 
-        if (window.scrollY > 50) {
+        let currentSection = "";
 
-            navbar.style.background =
-                "rgba(7,7,11,.88)";
+        sections.forEach(
+            (section) => {
 
-        } else {
+                const sectionTop =
+                    section.offsetTop - 150;
 
-            navbar.style.background =
-                "rgba(7,7,11,.55)";
+                if (
+                    window.scrollY >=
+                    sectionTop
+                ) {
 
-        }
+                    currentSection =
+                        section.getAttribute(
+                            "id"
+                        );
+
+                }
+
+            }
+        );
+
+
+        navLinks.forEach(
+            (link) => {
+
+                link.classList.remove(
+                    "active"
+                );
+
+
+                if (
+                    link.getAttribute("href") ===
+                    `#${currentSection}`
+                ) {
+
+                    link.classList.add(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
 
     },
     { passive: true }
 );
+
+
+/* =====================================================
+   SMOOTH ANCHOR SCROLL
+===================================================== */
+
+document
+    .querySelectorAll(
+        'a[href^="#"]'
+    )
+    .forEach((link) => {
+
+        link.addEventListener(
+            "click",
+            (event) => {
+
+                const targetId =
+                    link.getAttribute(
+                        "href"
+                    );
+
+
+                if (
+                    targetId === "#"
+                )
+                    return;
+
+
+                const target =
+                    document.querySelector(
+                        targetId
+                    );
+
+
+                if (!target)
+                    return;
+
+
+                event.preventDefault();
+
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+        );
+
+    });
 
 
 /* =====================================================
